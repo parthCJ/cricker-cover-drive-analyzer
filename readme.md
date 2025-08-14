@@ -1,4 +1,4 @@
-🏏 AthleteRise: AI-Powered Cricket Cover Drive Analyzer
+AI-Powered Cricket Cover Drive Analyzer
 An AI-powered web application built with MediaPipe to analyze the biomechanics of a cricket cover drive from a video. The tool provides quantitative scores and actionable feedback on key aspects of the batting technique.
 
 ✨ Features
