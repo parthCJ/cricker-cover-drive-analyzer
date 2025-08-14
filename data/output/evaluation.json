@@ -1,0 +1,15 @@
+{
+    "performance_summary": {
+        "Elbow Extension": 8.2,
+        "Head Position": 10.0
+    },
+    "actionable_feedback": {
+        "Elbow Extension": "Excellent arm extension, leading to a powerful shot.",
+        "Head Position": "Great head position, staying stable and over the front foot."
+    },
+    "processing_stats": {
+        "total_frames": 272,
+        "avg_fps": 4.31,
+        "metrics_frames": 271
+    }
+}
