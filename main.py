@@ -1,7 +1,7 @@
 import cv2
 import mediapipe as mp
 import numpy as np
-import yt_dlp
+import yt_dlp # for reading and writing the videos.
 import json
 import os
 import time
@@ -21,7 +21,7 @@ CONFIG = {
         "annotated_video": "data/output/annotated_video.mp4",
         "evaluation_report": "data/output/evaluation.json",
     },
-    # For a right-handed batsman. 
+    # For a right-handed batsman, for the left hand batsman invert the values.
     "keypoint_mapping": {
         "nose": 0, "left_shoulder": 11, "right_shoulder": 12,
         "left_elbow": 13, "right_elbow": 14, "left_wrist": 15, "right_wrist": 16,
@@ -30,7 +30,7 @@ CONFIG = {
         "left_foot_index": 31, "right_foot_index": 32,
     },
     "analysis_thresholds": {
-        "visibility_min": 0.6,
+        "visibility_min": 0.6, # this is the aspect ratio for the of the body wrt to screen.
         "good_elbow_angle": 160.0,  # extension angle for a good cover drive
         "bad_head_alignment": 0.15, # Normalized distance
     },
@@ -52,6 +52,8 @@ def download_video(url, output_path):
     print(f"Downloading video from {url} to {output_path}...")
     ydl_opts = {
         'format': 'bestvideo[ext=mp4][height<=720]+bestaudio[ext=m4a]/best[ext=mp4][height<=720]/best',
+        # ext-mp4 means the video is in the mp4v container, m4a for the best audio.
+
         'outtmpl': output_path,
         'quiet': False,
     }
@@ -65,7 +67,7 @@ def download_video(url, output_path):
 
 def calculate_angle_3d(a, b, c):
     """Calculates the angle between three 3D points (e.g., shoulder, elbow, wrist)."""
-    a, b, c = np.array(a), np.array(b), np.array(c)
+    a, b, c = np.array(a), np.array(b), np.array(c) # initialising the vector for three points.
     vec_ba = a - b
     vec_bc = c - b
     dot_product = np.dot(vec_ba, vec_bc)
@@ -83,6 +85,9 @@ def get_landmark_coords(landmarks, keypoint_index, dims=3):
     if dims == 3:
         return [lm.x, lm.y, lm.z]
     return [lm.x, lm.y]
+
+
+#This function converts a standard Python list of landmarks into a special format required by the MediaPipe library, specifically for drawing the landmarks onto an image.
 
 def create_landmark_list_from_landmarks(landmarks):
     """Convert landmarks list to NormalizedLandmarkList for drawing."""
