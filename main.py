@@ -72,6 +72,7 @@ def calculate_angle_3d(a, b, c):
     norm_product = np.linalg.norm(vec_ba) * np.linalg.norm(vec_bc) # normalising the vector.
     if norm_product == 0:
         return 0.0 # Avoid division by zero
+        # np.clip for avoiding the minor floating point errors
     cosine_angle = np.clip(dot_product / norm_product, -1.0, 1.0) # .clip for setting the angle between -1.0 and 1.0
     angle = np.arccos(cosine_angle)
     return np.degrees(angle)
@@ -122,9 +123,7 @@ def analyze_cover_drive():
     test_cap.release()
     print("✅ Video file validated successfully")
 
-    # *** CORRECTION ***: Switched to IMAGE running mode for simpler frame-by-frame processing.
-    # The VIDEO mode requires a more complex asynchronous callback setup, which was not
-    # correctly implemented in the original code. This is the main fix.
+    
     BaseOptions = mp.tasks.BaseOptions
     PoseLandmarkerOptions = mp.tasks.vision.PoseLandmarkerOptions
     VisionRunningMode = mp.tasks.vision.RunningMode
