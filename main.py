@@ -9,12 +9,10 @@ import math
 
 # --- 2. Configuration ---
 
-# This section centralizes all tunable parameters.
+# this section set all the parameters
 CONFIG = {
-    # Changed to a classic cover drive video for better analysis
+
     "video_url": "https://youtube.com/shorts/vSX3IRxGnNY",
-    # *** CORRECTION ***: Removed the "(1)" from the filename.
-    # The file must be renamed to this in your folder.
     "model_path": "pose-landmark-model\pose_landmarker_heavy (1).task",
     "data_paths": {
         "input": "data/input",
@@ -23,7 +21,7 @@ CONFIG = {
         "annotated_video": "data/output/annotated_video.mp4",
         "evaluation_report": "data/output/evaluation.json",
     },
-    # For a right-handed batsman. Invert for a left-handed player.
+    # For a right-handed batsman. 
     "keypoint_mapping": {
         "nose": 0, "left_shoulder": 11, "right_shoulder": 12,
         "left_elbow": 13, "right_elbow": 14, "left_wrist": 15, "right_wrist": 16,
@@ -33,18 +31,18 @@ CONFIG = {
     },
     "analysis_thresholds": {
         "visibility_min": 0.6,
-        "good_elbow_angle": 160.0,  # Max extension angle for a good cover drive
+        "good_elbow_angle": 160.0,  # extension angle for a good cover drive
         "bad_head_alignment": 0.15, # Normalized distance
     },
     "output_video": {
         "codec": "XVID",  # Better codec for compatibility
-        "width": 1920,    # Increased resolution
-        "height": 1080,   # HD quality
+        "width": 1920,   
+        "height": 1080,  
         "maintain_aspect_ratio": True,
     }
 }
 
-# --- 3. Utility and Biomechanical Calculation Functions ---
+# --- 3.Biomechanical Calculation Functions ---
 
 def download_video(url, output_path):
     """Downloads a video from a URL using yt-dlp if it doesn't already exist."""
@@ -71,10 +69,10 @@ def calculate_angle_3d(a, b, c):
     vec_ba = a - b
     vec_bc = c - b
     dot_product = np.dot(vec_ba, vec_bc)
-    norm_product = np.linalg.norm(vec_ba) * np.linalg.norm(vec_bc)
+    norm_product = np.linalg.norm(vec_ba) * np.linalg.norm(vec_bc) # normalising the vector.
     if norm_product == 0:
         return 0.0 # Avoid division by zero
-    cosine_angle = np.clip(dot_product / norm_product, -1.0, 1.0)
+    cosine_angle = np.clip(dot_product / norm_product, -1.0, 1.0) # .clip for setting the angle between -1.0 and 1.0
     angle = np.arccos(cosine_angle)
     return np.degrees(angle)
 
@@ -176,7 +174,7 @@ def analyze_cover_drive():
             output_height = target_height
             output_width = int(target_height * aspect_ratio)
         
-        # Ensure dimensions are even (required for some codecs)
+        # Ensure dimensions are even.
         output_width = output_width if output_width % 2 == 0 else output_width - 1
         output_height = output_height if output_height % 2 == 0 else output_height - 1
     else:
@@ -211,13 +209,12 @@ def analyze_cover_drive():
             mp_image = mp.Image(image_format=mp.ImageFormat.SRGB, data=rgb_frame)
             
             # Perform pose detection on the current frame
-            # *** CORRECTION ***: Using the synchronous `detect` method for IMAGE mode.
+            
             detection_result = landmarker.detect(mp_image)
 
             frame_metrics = {"frame": frame_count}
             feedback_text = []
 
-            # *** CORRECTION ***: Correctly check for results and access the first pose.
             if detection_result.pose_landmarks:
                 # Access the landmarks for the first detected person ([0])
                 landmarks = detection_result.pose_landmarks[0]
